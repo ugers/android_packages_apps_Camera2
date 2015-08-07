@@ -132,7 +132,7 @@ public class Storage {
             values.put(ImageColumns.DISPLAY_NAME, title + ".raw");
         }
         values.put(ImageColumns.DATE_TAKEN, date);
-        values.put(ImageColumns.MIME_TYPE, "image/jpeg");
+        values.put(ImageColumns.MIME_TYPE, mimeType);
         // Clockwise rotation in degrees. 0, 90, 180, or 270.
         values.put(ImageColumns.ORIENTATION, orientation);
         values.put(ImageColumns.DATA, path);

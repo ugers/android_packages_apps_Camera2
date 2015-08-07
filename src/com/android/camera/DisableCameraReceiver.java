@@ -42,7 +42,7 @@ public class DisableCameraReceiver extends BroadcastReceiver {
             : hasCamera();
 
         if (!needCameraActivity) {
-            Log.i(TAG, "No sensors detected and so, disable all camera activities/CameraLauncher");
+            Log.i(TAG, "disable all camera activities");
             for (int i = 0; i < ACTIVITIES.length; i++) {
                 disableComponent(context, ACTIVITIES[i]);
             }

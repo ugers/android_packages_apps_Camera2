@@ -346,9 +346,6 @@ public class CameraActivity extends Activity
                 @Override
                 public void onDataFullScreenChange(int dataID, boolean full) {
                     boolean isCameraID = isCameraPreview(dataID);
-                    if (full && isCameraID && CameraActivity.this.hasWindowFocus()){
-                        updateStorageSpaceAndHint();
-                    }
                     if (!isCameraID) {
                         if (!full) {
                             // Always show action bar in filmstrip mode
@@ -936,6 +933,13 @@ public class CameraActivity extends Activity
         if (currentDataId < 0) {
             return false;
         }
+		
+	 if(mFilmStripView.isZoomStarted()){
+	       mMainHandler.removeMessages(HIDE_ACTION_BAR);
+	       mMainHandler.sendEmptyMessage(HIDE_ACTION_BAR);
+	       return false;
+	 }
+	 
         final LocalData localData = mDataAdapter.getLocalData(currentDataId);
 
         // Handle presses on the action bar items
@@ -947,7 +951,8 @@ public class CameraActivity extends Activity
                     return true;
                 } catch (ActivityNotFoundException e) {
                     Log.w(TAG, "Failed to launch gallery activity, closing");
-                    finish();
+    //                finish();
+			return true;
                 }
             case R.id.action_delete:
                 UsageStatistics.onEvent(UsageStatistics.COMPONENT_CAMERA,
@@ -1541,17 +1546,14 @@ public class CameraActivity extends Activity
      * Launches an ACTION_EDIT intent for the given local data item.
      */
     public void launchEditor(LocalData data) {
-        if (!mIsEditActivityInProgress) {
-            Intent intent = new Intent(Intent.ACTION_EDIT)
-                    .setDataAndType(data.getContentUri(), data.getMimeType())
-                    .setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            try {
-                startActivityForResult(intent, REQ_CODE_DONT_SWITCH_TO_PREVIEW);
-            } catch (ActivityNotFoundException e) {
-                startActivityForResult(Intent.createChooser(intent, null),
-                        REQ_CODE_DONT_SWITCH_TO_PREVIEW);
-            }
-            mIsEditActivityInProgress = true;
+        Intent intent = new Intent(Intent.ACTION_EDIT)
+                .setDataAndType(data.getContentUri(), data.getMimeType())
+                .setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        try {
+            startActivityForResult(intent, REQ_CODE_DONT_SWITCH_TO_PREVIEW);
+        } catch (ActivityNotFoundException e) {
+            startActivityForResult(Intent.createChooser(intent, null),
+                    REQ_CODE_DONT_SWITCH_TO_PREVIEW);
         }
     }
 

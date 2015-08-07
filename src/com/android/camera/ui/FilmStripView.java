@@ -409,7 +409,6 @@ public class FilmStripView extends ViewGroup implements BottomControlsListener {
         public void goToFilmStrip();
 
         public void goToFullScreen();
-
     }
 
     /**
@@ -1853,7 +1852,7 @@ public class FilmStripView extends ViewGroup implements BottomControlsListener {
         // Check the current one.
         ViewItem curr = mViewItem[mCurrentItem];
         int dataId = curr.getId();
-        if (reporter.isDataRemoved(dataId) || mDataAdapter.getTotalNumber() == 1) {
+        if (reporter.isDataRemoved(dataId)) {
             reload();
             return;
         }
@@ -2922,4 +2921,8 @@ public class FilmStripView extends ViewGroup implements BottomControlsListener {
             mScaleTrend = 1f;
         }
     }
+	public boolean isZoomStarted(){
+		if(mController == null) return false;
+		return mController.isZoomStarted();
+	}
 }

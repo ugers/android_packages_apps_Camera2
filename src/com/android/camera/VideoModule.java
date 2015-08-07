@@ -98,7 +98,7 @@ public class VideoModule implements CameraModule,
 
     private static final int SCREEN_DELAY = 2 * 60 * 1000;
 
-    private static final long SHUTTER_BUTTON_TIMEOUT = 500L; // 500ms
+    private static final long SHUTTER_BUTTON_TIMEOUT = 1200L; // 500ms
 
     /**
      * An unpublished intent flag requesting to start recording straight away
@@ -547,16 +547,12 @@ public class VideoModule implements CameraModule,
 
     private boolean takeASnapshot() {
         // Only take snapshots if video snapshot is supported by device
-        if (CameraUtil.isVideoSnapshotSupported(mParameters) && !mIsVideoCaptureIntent
-            && !is4KEnabled()) {
+        if (CameraUtil.isVideoSnapshotSupported(mParameters) && !mIsVideoCaptureIntent) {
             if (!mMediaRecorderRecording || mPaused || mSnapshotInProgress) {
                 return false;
             }
             MediaSaveService s = mActivity.getMediaSaveService();
             if (s == null || s.isQueueFull()) {
-                return false;
-            }
-            if (mMediaRecorderPausing) {
                 return false;
             }
 
@@ -840,15 +836,6 @@ public class VideoModule implements CameraModule,
         getDesiredPreviewSize();
         qcomReadVideoPreferences();
         mPreferenceRead = true;
-    }
-
-    private boolean is4KEnabled() {
-       if (mProfile.quality == CamcorderProfile.QUALITY_4kUHD ||
-           mProfile.quality == CamcorderProfile.QUALITY_4kDCI) {
-           return true;
-       } else {
-           return false;
-       }
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -1735,7 +1722,7 @@ public class VideoModule implements CameraModule,
         Log.v(TAG, "pauseVideoRecording");
         mMediaRecorderPausing = true;
         mRecordingTotalTime += SystemClock.uptimeMillis() - mRecordingStartTime;
-        mMediaRecorder.pause();
+        //mMediaRecorder.pause();
     }
 
     private void resumeVideoRecording() {
